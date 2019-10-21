@@ -1204,11 +1204,40 @@ INSERT INTO `likes` (`id`, `user_id`, `media_id`, `created_at`) VALUES ('98', '9
 INSERT INTO `likes` (`id`, `user_id`, `media_id`, `created_at`) VALUES ('99', '99', '99', '2017-06-04 10:20:45');
 INSERT INTO `likes` (`id`, `user_id`, `media_id`, `created_at`) VALUES ('100', '100', '100', '1974-03-12 15:43:03');
 
+-- Lesson 4
 ALTER TABLE vk.users ADD `is_deleted` BIT NOT NULL DEFAULT 0;
 ALTER TABLE vk.messages ADD `is_deleted` BIT NOT NULL DEFAULT 0;
 
 
+-- Lesson 5
+-- Task 1.
 
+ALTER TABLE vk.profiles ADD updated_at DATETIME NULL;
+UPDATE vk.profiles SET created_at = NOW(), updated_at = NOW();
 
+-- Task 2.
 
+USE vk;
+
+DROP TABLE IF EXISTS profiles_new;
+CREATE TABLE profiles_new (
+	user_id SERIAL PRIMARY KEY,
+    gender CHAR(1),
+    birthday DATE,
+	photo_id BIGINT UNSIGNED NULL,
+    created_at DATETIME DEFAULT NOW(),
+    updated_at DATETIME DEFAULT NOW(),
+    hometown VARCHAR(100),
+    FOREIGN KEY (user_id) REFERENCES users(id)
+    ON UPDATE CASCADE 
+    ON DELETE restrict	
+);
+
+INSERT INTO profiles_new
+SELECT user_id, gender, birthday, photo_id, DATE_FORMAT(created_at, '%Y-%m-%d %H:%m:%s'), DATE_FORMAT(updated_at, '%Y-%m-%d %H:%m:%s'), hometown 
+FROM profiles;
+
+DROP TABLE profiles;
+
+ALTER TABLE profiles_new RENAME profiles;
 
