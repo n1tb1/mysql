@@ -1247,7 +1247,7 @@ ALTER TABLE profiles_new RENAME profiles;
 -- Getting messages for user_id = 1
 SELECT m.from_user_id as wanted, COUNT(m.from_user_id) as total 
 FROM vk.messages m
-LEFT JOIN vk.friend_requests fr ON (m.to_user_id = fr.initiator_user_id)
+LEFT JOIN vk.friend_requests fr ON ((m.to_user_id = fr.initiator_user_id) OR (m.to_user_id = fr.target_user_id))
 WHERE m.to_user_id = 1 AND fr.status = 'approved'
 GROUP BY wanted 
 ORDER BY total DESC 
